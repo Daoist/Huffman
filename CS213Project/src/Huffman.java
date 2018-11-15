@@ -1,3 +1,4 @@
+import java.util.BitSet;
 import java.util.HashMap;
 
 public class Huffman {
@@ -5,6 +6,9 @@ public class Huffman {
     String input;
     String encoded;
     String decoded;
+    BitSet codeSet;
+
+
     public Huffman(PriorityQueue pq){
         this.input  = pq.input;
         while(pq.getnItems() != 1) {
@@ -39,9 +43,10 @@ public class Huffman {
     public String encode(){
         StringBuilder sb = new StringBuilder();
         for (char c: input.toCharArray()) {
-            sb.append(code.get(c) + " ");
+            sb.append(code.get(c));
         }
         encoded = sb.toString();
+        compress();
         return encoded;
     }
 
@@ -59,6 +64,45 @@ public class Huffman {
         return decoded;
     }
 
+    public void decode(Node hTree, String str){
+        StringBuilder sb = new StringBuilder(str);
+        for (Character c:str.toCharArray()) {
+            if (hTree.leftChild == null && hTree.rightChild == null) {
+                if(hTree.key != '\u0000')
+                    sb.append(hTree.key);
+                return;
+            }
+            if(c == '0'){
+                createCode(hTree.leftChild, sb.toString());
+            }
+            if(c == '1'){
+                createCode(hTree.rightChild, sb.toString());
+            }
+        }
+    }
+
+
+    public void compress(){
+
+        codeSet = new BitSet(encoded.length());
+        int count = 0;
+        for(Character c : encoded.toCharArray()) {
+            if(c.equals('1')) {
+                codeSet.set(count);
+            }
+            count++;
+        }
+
+    }
+
+    public Node reconstructTree(String s){
+
+
+
+
+
+        return null;
+    }
 
 
 
